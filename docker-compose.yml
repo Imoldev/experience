@@ -1,0 +1,39 @@
+version: "3.7"
+
+services:
+
+  dev-server:
+    build:
+      context: ./dev-server/docker
+    ports:
+      - "3000:3000"
+    expose:
+      - 3000
+    volumes:
+      - ./www:/app
+    working_dir: /app
+    env_file:
+      - .env
+    entrypoint: bash -c "npm install && npm run start:dev"
+
+  cli:
+    build:
+      context: ./cli/docker
+    volumes:
+      - ./www:/app
+    working_dir: /app
+    env_file:
+      - .env
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: equipment
+    ports:
+      - 3306:3306
+
+
+
+

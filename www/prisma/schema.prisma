@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:root@db:3306/equipment"
+}
+
+model Equipment {
+  tenantId BigInt @id @map("tenant_id")
+  assets Asset[]
+}
+
+model Asset {
+tenantId BigInt  @map("tenant_id")
+name String
+equipment Equipment @relation(fields: [tenantId], references: [tenantId])
+extensions Extension[]
+
+@@id([tenantId, name])
+}
+
+model Extension {
+tenantId BigInt  @map("tenant_id")
+assetName String @map("asset_name")
+name String
+asset Asset @relation(fields: [tenantId, assetName], references: [tenantId, name])
+
+@@id([tenantId, assetName, name])
+}
