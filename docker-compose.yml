@@ -5,6 +5,7 @@ services:
   dev-server:
     build:
       context: ./dev-server/docker
+    container_name: 'server'
     ports:
       - "3000:3000"
     expose:
@@ -19,6 +20,7 @@ services:
   cli:
     build:
       context: ./cli/docker
+    container_name: 'cli'
     volumes:
       - ./www:/app
     working_dir: /app
@@ -27,12 +29,26 @@ services:
 
   db:
     image: mysql:5.7
+    container_name: 'db'
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: equipment
     ports:
       - 3306:3306
+
+  rabbit:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: root
+    volumes:
+      - ./rabbit/data:/var/lib/rabbitmq
+      - ./rabbit/log/:/var/log/rabbitmq
 
 
 
