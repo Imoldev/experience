@@ -8,14 +8,13 @@ services:
     container_name: 'server'
     ports:
       - "3000:3000"
-    expose:
-      - 3000
+      - "9229:9229"
     volumes:
       - ./www:/app
     working_dir: /app
     env_file:
       - .env
-    entrypoint: bash -c "npm install && npm run start:dev"
+
 
   cli:
     build:
@@ -27,15 +26,6 @@ services:
     env_file:
       - .env
 
-  db:
-    image: mysql:5.7
-    container_name: 'db'
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: equipment
-    ports:
-      - 3306:3306
 
   rabbit:
     image: rabbitmq:3-management
@@ -46,9 +36,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: root
       RABBITMQ_DEFAULT_PASS: root
-    volumes:
-      - ./rabbit/data:/var/lib/rabbitmq
-      - ./rabbit/log/:/var/log/rabbitmq
+
 
 
 
